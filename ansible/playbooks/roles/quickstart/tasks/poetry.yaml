@@ -1,31 +1,9 @@
 - name: install Poetry and create virtualenv
   block:
-    - name: install Poetry with pip as root
+    - name: Install poetry with pip
       pip:
         name: poetry
         executable: pip3
-      become: yes
-      register: poetry_install
-      failed_when:
-        - poetry_install is failed
-        - "'Unable to find any of pip3 to use.' not in (poetry_install.msg | default(''))"
-      # In CentOS it works the first time, but then fails in later plays.
-      # "which pip3" --> "/usr/local/bin/pip3"
-      # "sudo which pip3" --> "which: no pip3 in (/sbin:/bin:/usr/sbin:/usr/bin)"
-
-    - name: sudo pip3 not found message
-      debug:
-        # Print debug message because previous task shows as "ok" if it failed
-        msg: pip3 not found with sudo, retrying without sudo...
-      when:
-        - "'Unable to find any of pip3 to use.' in (poetry_install.msg | default(''))"
-
-    - name: retry Poetry install without sudo
-      pip:
-        name: poetry
-        executable: pip3
-      when:
-        - "'Unable to find any of pip3 to use.' in (poetry_install.msg | default(''))"
 
     - name: check if Poetry is available in path
       shell: command -v poetry  # noqa 305    "command" is a shell builtin, not an executable utility
