@@ -2,3 +2,9 @@
 . "$(dirname "$0")/_/husky.sh"
 
 poetry run pre-commit run --hook-stage push
+
+branch=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
+if [ "$branch" == "master" ]
+then
+    poetry run pre-commit run --hook-stage manual tests
+fi
