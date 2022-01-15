@@ -28,3 +28,12 @@ repos:
         always_run: true
         stages:
           - push
+
+      - id: tests
+        name: run tests
+        entry: poetry run python3 manage.py test
+        language: system
+        verbose: true
+        always_run: true
+        stages:
+          - manual
